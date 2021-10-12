@@ -6,17 +6,15 @@ const db = require('./db/db.json');
 const uniqid = require('uniqid');
 const fs = require('fs');
 
-// const router = express.Router();
-// const apiRoutes = require('./routes/apiRoutes.js');
-// const htmlRoutes = require('./routes/htmlRoutes.js');
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('./public'));
-// app.use('/api', apiRoutes);
-// app.use('/', htmlRoutes);
 
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
 
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
