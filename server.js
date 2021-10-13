@@ -27,12 +27,25 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
     const newNote = {...req.body, id:uniqid()};
     db.push(newNote);
-    fs.writeFile('./db/db.json', JSON.stringify(db), function catchErr(err) {
-        if (err) console.log(err);
-    })
+    updateDatabase();
     res.status(200).json(newNote);
+});
+
+app.delete('/api/notes/:id', (req, res) => {
+    const {id} = req.params;
+
+    const index = db.findIndex((n) => n.id === id);
+    db.splice(index, 1);
+    updateDatabase();
+    res.status(200).send(id);
 });
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
+
+function updateDatabase() {
+    fs.writeFile('./db/db.json', JSON.stringify(db), function catchErr(err) {
+        if (err) console.log(err);
+    })
+}
